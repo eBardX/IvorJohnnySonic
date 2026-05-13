@@ -12,6 +12,9 @@ public enum DKMArgument {
 // MARK: - ExpressibleByFloatLiteral
 
 extension DKMArgument: ExpressibleByFloatLiteral {
+    /// Creates an argument from a floating-point literal.
+    ///
+    /// - Parameter value:  The double-precision floating-point value.
     public init(floatLiteral value: Double) {
         self = .double(value)
     }
@@ -20,6 +23,9 @@ extension DKMArgument: ExpressibleByFloatLiteral {
 // MARK: - ExpressibleByStringLiteral
 
 extension DKMArgument: ExpressibleByStringLiteral {
+    /// Creates an argument from a string literal.
+    ///
+    /// - Parameter value:  The string literal value.
     public init(stringLiteral value: String) {
         self = .string(value)
     }

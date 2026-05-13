@@ -22,4 +22,4 @@ IvorJohnnySonic is available under [the MIT license][license].
 
 [docc]:     https://www.swift.org/documentation/docc/
 [license]:  https://github.com/eBardX/IvorJohnnySonic/blob/main/LICENSE.md
-[refdoc]:   https://eBardX.github.io/IvorJohnnySonic/documentation/xestijohnnysonic
+[refdoc]:   https://eBardX.github.io/ivor-packages-docs/documentation/xestijohnnysonic

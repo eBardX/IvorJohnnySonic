@@ -15,12 +15,12 @@ public enum DKMFormatError {
 // MARK: - EnhancedError
 
 extension DKMFormatError: EnhancedError {
-    /// Returns the error category identifying the source module.
+    /// The error category identifying the source module.
     public var category: Category? {
         Category("IvorJohnnySonic")
     }
 
-    /// Returns a human-readable description of this error.
+    /// A human-readable description of this error.
     public var message: String {
         switch self {
         case let .invalidStringArgument(value):

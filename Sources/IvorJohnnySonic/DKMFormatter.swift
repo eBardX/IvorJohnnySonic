@@ -24,7 +24,7 @@ extension DKMFormatter {
     ///
     /// - Returns:  The binary data representation of the score.
     ///
-    /// - Throws:   `DKMFormatError` if the score cannot be formatted.
+    /// - Throws:   ``DKMFormatError`` if the score cannot be formatted.
     public func format(_ score: DKMScore) throws -> Data {
         var writer = Writer(score: score)
 

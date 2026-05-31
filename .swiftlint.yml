@@ -144,7 +144,7 @@ cyclomatic_complexity:
   error: 20
   ignores_case_statements: true
 enum_case_associated_values_count:
-  warning: 6
+  warning: 10
 file_length:
   warning: 400
   error: 500

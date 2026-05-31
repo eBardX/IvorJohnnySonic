@@ -10,33 +10,53 @@ struct DKMScoreTests {
 
 extension DKMScoreTests {
     @Test
-    func test_initWithEmptyEntries() {
-        let score = DKMScore(entries: [])
+    func initWithEmptyCommands() {
+        let score = DKMScore(commands: [])
 
-        #expect(score.entries.isEmpty)
+        #expect(score.commands.isEmpty)
     }
 
     @Test
-    func test_initWithMultipleEntries() {
-        let entries = [DKMEntry(command: .soundFileName,
-                                arguments: "test.wav"),
-                       DKMEntry(command: .tempo,
-                                arguments: 120.0),
-                       DKMEntry(command: .end)]
-        let score = DKMScore(entries: entries)
+    func initWithMultipleCommands() {
+        let commands: [DKMCommand] = [.soundFileName("test.aiff"),
+                                      .tempoLine(startBeat: 0.0, duration: 1.0, initialTempo: 60.0, finalTempo: 60.0),
+                                      .end]
+        let score = DKMScore(commands: commands)
 
-        #expect(score.entries.count == 3)
-        #expect(score.entries[0].command == .soundFileName)
-        #expect(score.entries[1].command == .tempo)
-        #expect(score.entries[2].command == .end)
+        #expect(score.commands.count == 3)
+
+        if case let .soundFileName(name) = score.commands[0] {
+            #expect(name == "test.aiff")
+        } else {
+            Issue.record("Expected .soundFileName command")
+        }
+
+        if case let .tempoLine(startBeat, duration, initialTempo, finalTempo) = score.commands[1] {
+            #expect(startBeat == 0.0)
+            #expect(duration == 1.0)
+            #expect(initialTempo == 60.0)
+            #expect(finalTempo == 60.0)
+        } else {
+            Issue.record("Expected .tempoLine command")
+        }
+
+        if case .end = score.commands[2] {
+            // pass
+        } else {
+            Issue.record("Expected .end command")
+        }
     }
 
     @Test
-    func test_initWithSingleEntry() {
-        let entry = DKMEntry(command: .end)
-        let score = DKMScore(entries: [entry])
+    func initWithSingleCommand() {
+        let score = DKMScore(commands: [.end])
 
-        #expect(score.entries.count == 1)
-        #expect(score.entries[0].command == .end)
+        #expect(score.commands.count == 1)
+
+        if case .end = score.commands[0] {
+            // pass
+        } else {
+            Issue.record("Expected .end command")
+        }
     }
 }

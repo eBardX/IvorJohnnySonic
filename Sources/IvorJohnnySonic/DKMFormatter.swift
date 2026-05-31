@@ -2,12 +2,12 @@
 
 public import Foundation
 
-/// A type that formats a Johnny Sonic score as binary data.
+/// A type that formats a JohnnySonic score as binary data.
 public struct DKMFormatter {
 
     // MARK: Public Initializers
 
-    /// Creates a new Johnny Sonic formatter.
+    /// Creates a new JohnnySonic formatter.
     public init() {
     }
 }
@@ -18,9 +18,9 @@ extension DKMFormatter {
 
     // MARK: Public Instance Methods
 
-    /// Formats the provided Johnny Sonic score as binary data.
+    /// Formats the provided JohnnySonic score as binary data.
     ///
-    /// - Parameter score:  The Johnny Sonic score to format.
+    /// - Parameter score:  The JohnnySonic score to format.
     ///
     /// - Returns:  The binary data representation of the score.
     ///

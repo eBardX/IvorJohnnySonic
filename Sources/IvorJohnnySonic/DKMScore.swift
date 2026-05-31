@@ -1,21 +1,21 @@
 // © 2025–2026 John Gary Pusey (see LICENSE.md)
 
-/// A Johnny Sonic score consisting of an ordered list of entries.
+/// A JohnnySonic score consisting of an ordered list of commands.
 public struct DKMScore {
 
     // MARK: Public Initializers
 
-    /// Creates a new Johnny Sonic score with the provided entries.
+    /// Creates a new JohnnySonic score with the provided commands.
     ///
-    /// - Parameter entries:    The entries in the score.
-    public init(entries: [DKMEntry]) {
-        self.entries = entries
+    /// - Parameter commands:   The commands in the score.
+    public init(commands: [DKMCommand]) {
+        self.commands = commands
     }
 
     // MARK: Public Instance Properties
 
-    /// The entries in the score.
-    public let entries: [DKMEntry]
+    /// The commands in the score.
+    public let commands: [DKMCommand]
 }
 
 // MARK: - Sendable

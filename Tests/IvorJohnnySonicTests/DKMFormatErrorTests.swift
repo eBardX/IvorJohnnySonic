@@ -11,21 +11,21 @@ struct DKMFormatErrorTests {
 
 extension DKMFormatErrorTests {
     @Test
-    func test_category() {
+    func category() {
         let error = DKMFormatError.stringConversionFailed
 
         #expect(error.category?.description == "IvorJohnnySonic")
     }
 
     @Test
-    func test_invalidStringArgumentMessage() {
+    func invalidStringArgumentMessage() {
         let error = DKMFormatError.invalidStringArgument("bad\nvalue")
 
         #expect(error.message == "String argument contains invalid characters: bad\nvalue")
     }
 
     @Test
-    func test_message() {
+    func message() {
         let error = DKMFormatError.stringConversionFailed
 
         #expect(error.message == "Failed to convert string to UTF-8 data")

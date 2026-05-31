@@ -2,10 +2,10 @@
 
 public import XestiTools
 
-/// An error that occurs when formatting a Johnny Sonic score.
+/// An error that occurs when formatting a JohnnySonic score.
 public enum DKMFormatError {
     /// A string argument contains characters that are not valid in the
-    /// Johnny Sonic format.
+    /// JohnnySonic format.
     case invalidStringArgument(String)
 
     /// A string argument could not be converted to UTF-8 data.

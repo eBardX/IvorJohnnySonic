@@ -12,7 +12,7 @@ extension DKMFormatter {
 
         internal init(score: DKMScore) {
             self.buffer = ""
-            self.previousHeader = nil
+            self.previousSection = nil
             self.score = score
         }
 
@@ -21,7 +21,7 @@ extension DKMFormatter {
         private let score: DKMScore
 
         private var buffer: String
-        private var previousHeader: String?
+        private var previousSection: String?
     }
 }
 
@@ -49,18 +49,22 @@ extension DKMFormatter.Writer {
             // MARK: Comment
 
         case let .comment(text):
-            buffer.append("!\(text)\n")
+            buffer.append("!")
+            buffer.append(text)
+            buffer.append("\n")
 
             // MARK: /Chorus
 
         case let .chorusLine(startBeat, duration, numberOfVoices, depth, flipChannels):
-            _writeHeader("Chorus")
+            _writeSection("Chorus")
             _writeLine("\(startBeat) \(duration) \(numberOfVoices) \(depth) \(flipChannels ? 1 : 0)")
 
             // MARK: /Clip
 
         case let .clipMode(channel, name):
-            _writeHeader("Clip", force: true)
+            _writeSection("Clip",
+                          force: true)
+
             try _writeLine("\(channel.rawValue) \(_validateString(name))")
 
         case let .clipNote(startBeat, duration, volume, location, clipStart, clipRate, instrument):
@@ -69,41 +73,41 @@ extension DKMFormatter.Writer {
             // MARK: /Compress
 
         case let .compressLine(startBeat, duration, maxRatio):
-            _writeHeader("Compress")
+            _writeSection("Compress")
             _writeLine("\(startBeat) \(duration) \(maxRatio)")
 
             // MARK: /End
 
         case .end:
-            _writeHeader("End")
+            _writeSection("End")
 
             // MARK: /Exclude
 
         case .exclude:
-            _writeHeader("Exclude")
+            _writeSection("Exclude")
 
             // MARK: /FBA
 
         case let .freqBandAnalyzeLine(startBeat, duration, channel, buffer):
-            _writeHeader("FBA")
+            _writeSection("FBA")
             _writeLine("\(startBeat) \(duration) \(channel.rawValue) \(buffer.rawValue)")
 
             // MARK: /Filter
 
         case let .filterLine(startBeat, duration, filterType, initialPitch, finalPitch, initialBandwidth, finalBandwidth):
-            _writeHeader("Filter")
+            _writeSection("Filter")
             _writeLine("\(startBeat) \(duration) \(filterType.rawValue) \(initialPitch) \(finalPitch) \(initialBandwidth) \(finalBandwidth)")
 
             // MARK: /Flange
 
         case let .flangeLine(startBeat, duration, numberOfVoices, depth, flipChannels):
-            _writeHeader("Flange")
+            _writeSection("Flange")
             _writeLine("\(startBeat) \(duration) \(numberOfVoices) \(depth) \(flipChannels ? 1 : 0)")
 
             // MARK: /GEQ
 
         case let .geqLine(beat, bandGains):
-            _writeHeader("GEQ")
+            _writeSection("GEQ")
 
             let gains = bandGains.map { "\($0)" }.joined(separator: " ")
 
@@ -116,110 +120,117 @@ extension DKMFormatter.Writer {
             // MARK: /Haas
 
         case let .haas(enabled, minDelay, maxDelay, reverbSend):
-            _writeHeader("Haas")
+            _writeSection("Haas")
             _writeLine("\(enabled ? 1 : 0) \(minDelay) \(maxDelay) \(reverbSend ? 1 : 0)")
 
             // MARK: /Include
 
         case let .include(fileName):
-            _writeHeader("Include")
+            _writeSection("Include")
             try _writeLine(_validateString(fileName))
 
             // MARK: /Levels
 
         case let .levelsLine(startBeat, duration, startGainLossdB, endGainLossdB):
-            _writeHeader("Levels")
+            _writeSection("Levels")
             _writeLine("\(startBeat) \(duration) \(startGainLossdB) \(endGainLossdB)")
 
             // MARK: /Mix
 
         case let .mixLine(startBeat, duration, gainLossdB, keepSoundBuffer, sign, timeOffset):
-            _writeHeader("Mix")
+            _writeSection("Mix")
             _writeLine("\(startBeat) \(duration) \(gainLossdB) \(keepSoundBuffer ? 1 : 0) \(sign) \(timeOffset)")
 
             // MARK: /Pitches
 
         case let .pitchesNote(startBeat, duration, volume, location, startPitch, endPitch, instrument):
-            _writeHeader("Pitches")
+            _writeSection("Pitches")
+
             try _writeLine("\(startBeat) \(duration) \(volume) \(location) \(startPitch) \(endPitch) \(_validateString(instrument))")
 
             // MARK: /Pulse
 
         case let .pulseLine(startBeat, channel):
-            _writeHeader("Pulse")
+            _writeSection("Pulse")
             _writeLine("\(startBeat) \(channel.rawValue)")
 
             // MARK: /Reverb
 
         case let .reverbLine(startBeat, duration, direction, size, reverbTime, combFilterDryGain, xTalkFactor, wetness):
-            _writeHeader("Reverb")
+            _writeSection("Reverb")
             _writeLine("\(startBeat) \(duration) \(direction.rawValue) \(size.rawValue)"
                        + " \(reverbTime) \(combFilterDryGain) \(xTalkFactor) \(wetness)")
 
             // MARK: /ScreenOut
 
         case let .screenOut(level):
-            _writeHeader("ScreenOut")
+            _writeSection("ScreenOut")
             _writeLine("\(level.rawValue)")
 
             // MARK: /SendBack
 
         case let .sendBackLine(startBeat, duration, gainLossdB):
-            _writeHeader("SendBack")
+            _writeSection("SendBack")
             _writeLine("\(startBeat) \(duration) \(gainLossdB)")
 
             // MARK: /SFN
 
         case let .soundFileName(name):
-            _writeHeader("SFN")
+            _writeSection("SFN")
+
             try _writeLine(_validateString(name))
 
             // MARK: /ShowBuffer
 
         case let .showBufferLine(startBeat, duration):
-            _writeHeader("ShowBuffer")
+            _writeSection("ShowBuffer")
             _writeLine("\(startBeat) \(duration)")
 
             // MARK: /Stats
 
         case let .statsLine(startBeat, duration):
-            _writeHeader("Stats")
+            _writeSection("Stats")
             _writeLine("\(startBeat) \(duration)")
 
             // MARK: /Tempo
 
         case let .tempoLine(startBeat, duration, initialTempo, finalTempo):
-            _writeHeader("Tempo")
+            _writeSection("Tempo")
             _writeLine("\(startBeat) \(duration) \(initialTempo) \(finalTempo)")
 
             // MARK: /Tuning
 
         case let .tuning(primaryInterval, notesPerInterval, pitchConvExponent, pitchConvFactor):
-            _writeHeader("Tuning")
+            _writeSection("Tuning")
             _writeLine("\(primaryInterval) \(notesPerInterval) \(pitchConvExponent) \(pitchConvFactor)")
 
             // MARK: /Vocode
 
         case let .vocodeMode(channel, name, clipRate, maxHarm, slope, bassBoost, dynExponent, shiftN, peakReduction):
-            _writeHeader("Vocode", force: true)
+            _writeSection("Vocode",
+                          force: true)
+
             try _writeLine("\(channel.rawValue) \(_validateString(name)) \(clipRate) \(maxHarm)"
-                       + " \(slope) \(bassBoost) \(dynExponent) \(shiftN) \(peakReduction)")
+                           + " \(slope) \(bassBoost) \(dynExponent) \(shiftN) \(peakReduction)")
 
         case let .vocodeNote(startBeat, duration, volume, location, pitch, clipStart, instrument):
             try _writeLine("\(startBeat) \(duration) \(volume) \(location) \(pitch) \(clipStart) \(_validateString(instrument))")
         }
     }
 
-    private mutating func _writeHeader(_ header: String,
-                                       force: Bool = false) {
-        // Writes `/Header\n` when the section changes; always writes when
+    private mutating func _writeSection(_ section: String,
+                                        force: Bool = false) {
+        // Writes `/Section\n` when the section changes; always writes when
         // `force` is `true` (used by mode-setting commands such as `/Clip` and
-        // `/Vocode` that must restate their header for each new mode block).
-        if force || header != previousHeader {
-            previousHeader = header
+        // `/Vocode` that must restate their section for each new mode block).
+        guard force || section != previousSection
+        else { return }
 
-            buffer.append("/\(header)\n")
-        }
+        previousSection = section
+
+        buffer.append("/")
+        buffer.append(section)
+        buffer.append("\n")
     }
 
     private mutating func _writeLine(_ line: String) {

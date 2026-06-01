@@ -3,12 +3,29 @@
 @testable import IvorJohnnySonic
 import Testing
 
+// swiftlint:disable file_length
+
 struct DKMCommandTests {
 }
 
 // MARK: -
 
 extension DKMCommandTests {
+    @Test
+    func channelRawValueInit() {
+        #expect(DKMChannel(rawValue: "B") == .both)
+        #expect(DKMChannel(rawValue: "L") == .left)
+        #expect(DKMChannel(rawValue: "R") == .right)
+        #expect(DKMChannel(rawValue: "X") == nil)
+    }
+
+    @Test
+    func channelRawValues() {
+        #expect(DKMChannel.both.rawValue == "B")
+        #expect(DKMChannel.left.rawValue == "L")
+        #expect(DKMChannel.right.rawValue == "R")
+    }
+
     @Test
     func chorusLine() {
         let command = DKMCommand.chorusLine(startBeat: 8.0,
@@ -26,6 +43,19 @@ extension DKMCommandTests {
         } else {
             Issue.record("Expected .chorusLine case")
         }
+    }
+
+    @Test
+    func clipChannelRawValueInit() {
+        #expect(DKMClipChannel(rawValue: 0) == .left)
+        #expect(DKMClipChannel(rawValue: 1) == .right)
+        #expect(DKMClipChannel(rawValue: 2) == nil)
+    }
+
+    @Test
+    func clipChannelRawValues() {
+        #expect(DKMClipChannel.left.rawValue == 0)
+        #expect(DKMClipChannel.right.rawValue == 1)
     }
 
     @Test
@@ -99,6 +129,19 @@ extension DKMCommandTests {
     }
 
     @Test
+    func equality() {
+        #expect(DKMCommand.end == .end)
+        #expect(DKMCommand.comment(" Hello") == .comment(" Hello"))
+        #expect(DKMCommand.tempoLine(startBeat: 0.0,
+                                     duration: 1.0,
+                                     initialTempo: 60.0,
+                                     finalTempo: 60.0) == .tempoLine(startBeat: 0.0,
+                                                                     duration: 1.0,
+                                                                     initialTempo: 60.0,
+                                                                     finalTempo: 60.0))
+    }
+
+    @Test
     func exclude() {
         let command = DKMCommand.exclude
 
@@ -107,6 +150,34 @@ extension DKMCommandTests {
         } else {
             Issue.record("Expected .exclude case")
         }
+    }
+
+    @Test
+    func fbaBufferRawValueInit() {
+        #expect(DKMFBABuffer(rawValue: "M") == .mix)
+        #expect(DKMFBABuffer(rawValue: "S") == .sound)
+        #expect(DKMFBABuffer(rawValue: "X") == nil)
+    }
+
+    @Test
+    func fbaBufferRawValues() {
+        #expect(DKMFBABuffer.mix.rawValue == "M")
+        #expect(DKMFBABuffer.sound.rawValue == "S")
+    }
+
+    @Test
+    func fbaChannelRawValueInit() {
+        #expect(DKMFBAChannel(rawValue: -1) == .combined)
+        #expect(DKMFBAChannel(rawValue: 0) == .left)
+        #expect(DKMFBAChannel(rawValue: 1) == .right)
+        #expect(DKMFBAChannel(rawValue: 2) == nil)
+    }
+
+    @Test
+    func fbaChannelRawValues() {
+        #expect(DKMFBAChannel.combined.rawValue == -1)
+        #expect(DKMFBAChannel.left.rawValue == 0)
+        #expect(DKMFBAChannel.right.rawValue == 1)
     }
 
     @Test
@@ -130,6 +201,35 @@ extension DKMCommandTests {
         } else {
             Issue.record("Expected .filterLine case")
         }
+    }
+
+    @Test
+    func filterTypeRawValueInit() {
+        #expect(DKMFilterType(rawValue: 1) == .allPoleBandpassZeroDBGain)
+        #expect(DKMFilterType(rawValue: 2) == .allPoleBandpassPowerPreserving)
+        #expect(DKMFilterType(rawValue: 3) == .butterworthLowpass)
+        #expect(DKMFilterType(rawValue: 4) == .butterworthHighpass)
+        #expect(DKMFilterType(rawValue: 5) == .butterworthBandpass)
+        #expect(DKMFilterType(rawValue: 6) == .butterworthNotch)
+        #expect(DKMFilterType(rawValue: 13) == .firLowpass)
+        #expect(DKMFilterType(rawValue: 14) == .firHighpass)
+        #expect(DKMFilterType(rawValue: 16) == .firNotch)
+        #expect(DKMFilterType(rawValue: 0) == nil)
+        #expect(DKMFilterType(rawValue: 7) == nil)
+        #expect(DKMFilterType(rawValue: 15) == nil)
+    }
+
+    @Test
+    func filterTypeRawValues() {
+        #expect(DKMFilterType.allPoleBandpassZeroDBGain.rawValue == 1)
+        #expect(DKMFilterType.allPoleBandpassPowerPreserving.rawValue == 2)
+        #expect(DKMFilterType.butterworthLowpass.rawValue == 3)
+        #expect(DKMFilterType.butterworthHighpass.rawValue == 4)
+        #expect(DKMFilterType.butterworthBandpass.rawValue == 5)
+        #expect(DKMFilterType.butterworthNotch.rawValue == 6)
+        #expect(DKMFilterType.firLowpass.rawValue == 13)
+        #expect(DKMFilterType.firHighpass.rawValue == 14)
+        #expect(DKMFilterType.firNotch.rawValue == 16)
     }
 
     @Test
@@ -206,6 +306,13 @@ extension DKMCommandTests {
     }
 
     @Test
+    func inequality() {
+        #expect(DKMCommand.end != .exclude)
+        #expect(DKMCommand.comment(" Hello") != .comment(" World"))
+        #expect(DKMCommand.end != .comment(""))
+    }
+
+    @Test
     func levelsLine() {
         let command = DKMCommand.levelsLine(startBeat: 5.0,
                                             duration: 10.0,
@@ -279,6 +386,19 @@ extension DKMCommandTests {
     }
 
     @Test
+    func reverbDirectionRawValueInit() {
+        #expect(DKMReverbDirection(rawValue: -1) == .backward)
+        #expect(DKMReverbDirection(rawValue: 1) == .forward)
+        #expect(DKMReverbDirection(rawValue: 0) == nil)
+    }
+
+    @Test
+    func reverbDirectionRawValues() {
+        #expect(DKMReverbDirection.backward.rawValue == -1)
+        #expect(DKMReverbDirection.forward.rawValue == 1)
+    }
+
+    @Test
     func reverbLine() {
         let command = DKMCommand.reverbLine(startBeat: 8.8,
                                             duration: 12.0,
@@ -301,6 +421,40 @@ extension DKMCommandTests {
         } else {
             Issue.record("Expected .reverbLine case")
         }
+    }
+
+    @Test
+    func reverbSizeRawValueInit() {
+        #expect(DKMReverbSize(rawValue: 1) == .small)
+        #expect(DKMReverbSize(rawValue: 2) == .medium)
+        #expect(DKMReverbSize(rawValue: 3) == .large)
+        #expect(DKMReverbSize(rawValue: 0) == nil)
+        #expect(DKMReverbSize(rawValue: 4) == nil)
+    }
+
+    @Test
+    func reverbSizeRawValues() {
+        #expect(DKMReverbSize.small.rawValue == 1)
+        #expect(DKMReverbSize.medium.rawValue == 2)
+        #expect(DKMReverbSize.large.rawValue == 3)
+    }
+
+    @Test
+    func screenLevelRawValueInit() {
+        #expect(DKMScreenLevel(rawValue: 0) == .quiet)
+        #expect(DKMScreenLevel(rawValue: 1) == .medium)
+        #expect(DKMScreenLevel(rawValue: 2) == .verbose)
+        #expect(DKMScreenLevel(rawValue: 3) == .debug)
+        #expect(DKMScreenLevel(rawValue: 4) == nil)
+        #expect(DKMScreenLevel(rawValue: -1) == nil)
+    }
+
+    @Test
+    func screenLevelRawValues() {
+        #expect(DKMScreenLevel.quiet.rawValue == 0)
+        #expect(DKMScreenLevel.medium.rawValue == 1)
+        #expect(DKMScreenLevel.verbose.rawValue == 2)
+        #expect(DKMScreenLevel.debug.rawValue == 3)
     }
 
     @Test
@@ -441,97 +595,5 @@ extension DKMCommandTests {
         } else {
             Issue.record("Expected .vocodeNote case")
         }
-    }
-}
-
-// MARK: - DKMChannel
-
-extension DKMCommandTests {
-    @Test
-    func channelRawValues() {
-        #expect(DKMChannel.both.rawValue == "B")
-        #expect(DKMChannel.left.rawValue == "L")
-        #expect(DKMChannel.right.rawValue == "R")
-    }
-}
-
-// MARK: - DKMClipChannel
-
-extension DKMCommandTests {
-    @Test
-    func clipChannelRawValues() {
-        #expect(DKMClipChannel.left.rawValue == 0)
-        #expect(DKMClipChannel.right.rawValue == 1)
-    }
-}
-
-// MARK: - DKMFBABuffer
-
-extension DKMCommandTests {
-    @Test
-    func fbaBufferRawValues() {
-        #expect(DKMFBABuffer.mix.rawValue == "M")
-        #expect(DKMFBABuffer.sound.rawValue == "S")
-    }
-}
-
-// MARK: - DKMFBAChannel
-
-extension DKMCommandTests {
-    @Test
-    func fbaChannelRawValues() {
-        #expect(DKMFBAChannel.combined.rawValue == -1)
-        #expect(DKMFBAChannel.left.rawValue == 0)
-        #expect(DKMFBAChannel.right.rawValue == 1)
-    }
-}
-
-// MARK: - DKMFilterType
-
-extension DKMCommandTests {
-    @Test
-    func filterTypeRawValues() {
-        #expect(DKMFilterType.allPoleBandpassZeroDBGain.rawValue == 1)
-        #expect(DKMFilterType.allPoleBandpassPowerPreserving.rawValue == 2)
-        #expect(DKMFilterType.butterworthLowpass.rawValue == 3)
-        #expect(DKMFilterType.butterworthHighpass.rawValue == 4)
-        #expect(DKMFilterType.butterworthBandpass.rawValue == 5)
-        #expect(DKMFilterType.butterworthNotch.rawValue == 6)
-        #expect(DKMFilterType.firLowpass.rawValue == 13)
-        #expect(DKMFilterType.firHighpass.rawValue == 14)
-        #expect(DKMFilterType.firNotch.rawValue == 16)
-    }
-}
-
-// MARK: - DKMReverbDirection
-
-extension DKMCommandTests {
-    @Test
-    func reverbDirectionRawValues() {
-        #expect(DKMReverbDirection.backward.rawValue == -1)
-        #expect(DKMReverbDirection.forward.rawValue == 1)
-    }
-}
-
-// MARK: - DKMReverbSize
-
-extension DKMCommandTests {
-    @Test
-    func reverbSizeRawValues() {
-        #expect(DKMReverbSize.small.rawValue == 1)
-        #expect(DKMReverbSize.medium.rawValue == 2)
-        #expect(DKMReverbSize.large.rawValue == 3)
-    }
-}
-
-// MARK: - DKMScreenLevel
-
-extension DKMCommandTests {
-    @Test
-    func screenLevelRawValues() {
-        #expect(DKMScreenLevel.quiet.rawValue == 0)
-        #expect(DKMScreenLevel.medium.rawValue == 1)
-        #expect(DKMScreenLevel.verbose.rawValue == 2)
-        #expect(DKMScreenLevel.debug.rawValue == 3)
     }
 }

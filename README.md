@@ -1,12 +1,12 @@
 # IvorJohnnySonic
 
-A Johnny Sonic score file formatter.
+A Johnny Sonic score file parser and formatter.
 
 ## <a name="overview">Overview</a>
 
 The IvorJohnnySonic framework provides a [Johnny Sonic score
 file](https://github.com/JohnnySonic/JohnnySonic/blob/main/JohnnySonicDoc.pdf)
-formatter written in Swift.
+parser and formatter written in Swift.
 
 ## <a name="reference_documentation">Reference Documentation</a>
 

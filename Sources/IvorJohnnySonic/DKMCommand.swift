@@ -429,6 +429,11 @@ public enum DKMCommand {
                     instrument: String)
 }
 
+// MARK: - Equatable
+
+extension DKMCommand: Equatable {
+}
+
 // MARK: - Sendable
 
 extension DKMCommand: Sendable {

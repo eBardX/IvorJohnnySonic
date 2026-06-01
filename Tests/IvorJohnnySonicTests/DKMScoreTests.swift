@@ -10,6 +10,25 @@ struct DKMScoreTests {
 
 extension DKMScoreTests {
     @Test
+    func equality() {
+        let lhs = DKMScore(commands: [.end])
+        let rhs = DKMScore(commands: [.end])
+
+        #expect(lhs == rhs)
+
+        let emptyLhs = DKMScore(commands: [])
+        let emptyRhs = DKMScore(commands: [])
+
+        #expect(emptyLhs == emptyRhs)
+    }
+
+    @Test
+    func inequality() {
+        #expect(DKMScore(commands: [.end]) != DKMScore(commands: []))
+        #expect(DKMScore(commands: [.end]) != DKMScore(commands: [.exclude]))
+    }
+
+    @Test
     func initWithEmptyCommands() {
         let score = DKMScore(commands: [])
 

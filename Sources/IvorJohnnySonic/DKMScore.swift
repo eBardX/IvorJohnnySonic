@@ -18,6 +18,11 @@ public struct DKMScore {
     public let commands: [DKMCommand]
 }
 
+// MARK: - Equatable
+
+extension DKMScore: Equatable {
+}
+
 // MARK: - Sendable
 
 extension DKMScore: Sendable {

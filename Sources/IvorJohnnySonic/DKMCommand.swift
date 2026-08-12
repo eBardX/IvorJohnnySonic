@@ -10,18 +10,8 @@
 /// ``vocodeMode(_:_:_:_:_:_:_:_:_:)`` / ``vocodeNote(_:_:_:_:_:_:_:)``).
 public enum DKMCommand {
 
-    // MARK: Comment
-
-    /// A comment; has no effect on playback.
-    ///
-    /// The associated value is the comment text, including any leading space.
-    /// An empty string produces a bare `!` line.
-    case comment(String)
-
-    // MARK: /Chorus
-
-    /// A line of parameters for invoking the choruser on a segment of the sound
-    /// buffer.
+    /// A line of parameters for invoking the choruser on a segment of the
+    /// sound buffer.
     ///
     /// - Parameter startBeat:      Starting beat.
     /// - Parameter duration:       Duration in beats.
@@ -36,9 +26,8 @@ public enum DKMCommand {
                     depth: Double,
                     flipChannels: Bool)
 
-    // MARK: /Clip
-
-    /// Sets clip mode, specifying the clip channel and clip name.
+    /// A command that sets clip mode, specifying the clip channel and clip
+    /// name.
     ///
     /// Must precede any ``clipNote(_:_:_:_:_:_:_:)`` entries for this clip.
     ///
@@ -68,7 +57,11 @@ public enum DKMCommand {
                   clipRate: Double,
                   instrument: String)
 
-    // MARK: /Compress
+    /// A comment; has no effect on playback.
+    ///
+    /// The associated value is the comment text, including any leading space.
+    /// An empty string produces a bare `!` line.
+    case comment(String)
 
     /// A line of parameters for invoking the compressor on a segment of the
     /// sound buffer.
@@ -80,34 +73,15 @@ public enum DKMCommand {
                       duration: Double,
                       maxRatio: Double)
 
-    // MARK: /End
-
-    /// Marks the end of the score.
+    /// A command that marks the end of the score.
     ///
     /// Processing stops at this point even if more commands follow.
     case end
 
-    // MARK: /Exclude
-
-    /// Marks the end of an include file.
+    /// A command that marks the end of an include file.
     ///
     /// Processing continues in the main score file from where it left off.
     case exclude
-
-    // MARK: /FBA
-
-    /// A line of parameters for a frequency band analysis.
-    ///
-    /// - Parameter startBeat:  Starting beat for the analysis.
-    /// - Parameter duration:   Duration in beats.
-    /// - Parameter channel:    The channel to analyze.
-    /// - Parameter buffer:     The buffer to analyze.
-    case freqBandAnalyzeLine(startBeat: Double,
-                             duration: Double,
-                             channel: DKMFBAChannel,
-                             buffer: DKMFBABuffer)
-
-    // MARK: /Filter
 
     /// A line of parameters for applying an audio filter to a segment of the
     /// sound buffer.
@@ -134,8 +108,6 @@ public enum DKMCommand {
                     initialBandwidth: Double,
                     finalBandwidth: Double)
 
-    // MARK: /Flange
-
     /// A line of parameters for invoking the flanger on a segment of the sound
     /// buffer.
     ///
@@ -152,7 +124,16 @@ public enum DKMCommand {
                     depth: Double,
                     flipChannels: Bool)
 
-    // MARK: /GEQ
+    /// A line of parameters for a frequency band analysis.
+    ///
+    /// - Parameter startBeat:  Starting beat for the analysis.
+    /// - Parameter duration:   Duration in beats.
+    /// - Parameter channel:    The channel to analyze.
+    /// - Parameter buffer:     The buffer to analyze.
+    case freqBandAnalyzeLine(startBeat: Double,
+                             duration: Double,
+                             channel: DKMFBAChannel,
+                             buffer: DKMFBABuffer)
 
     /// A line of parameters for a graphic equalizer segment.
     ///
@@ -164,9 +145,7 @@ public enum DKMCommand {
     case geqLine(beat: Double,
                  bandGains: [Double])
 
-    // MARK: /Haas
-
-    /// Sets the global Haas effect parameters.
+    /// A command that sets the global Haas effect parameters.
     ///
     /// Affects all subsequent notes until changed by another ``haas(_:_:_:_:)``
     /// command.  Haas is disabled by default.
@@ -180,15 +159,12 @@ public enum DKMCommand {
               maxDelay: Double,
               reverbSend: Bool)
 
-    // MARK: /Include
-
-    /// Processes an include file before continuing with the main score file.
+    /// A command that processes an include file before continuing with the
+    /// main score file.
     ///
     /// - Parameter fileName:  Path to the include file.  Include files cannot
     ///                        be nested.
     case include(String)
-
-    // MARK: /Levels
 
     /// A line of parameters for adjusting levels on a segment of the sound
     /// buffer.
@@ -204,8 +180,6 @@ public enum DKMCommand {
                     duration: Double,
                     startGainLossdB: Double,
                     endGainLossdB: Double)
-
-    // MARK: /Mix
 
     /// A line of parameters for mixing the sound and Haas buffers into the mix
     /// buffer.
@@ -229,8 +203,6 @@ public enum DKMCommand {
                  sign: Double,
                  timeOffset: Double)
 
-    // MARK: /Pitches
-
     /// A note in default (pitch) mode.
     ///
     /// - Parameter startBeat:  Starting beat.
@@ -251,8 +223,6 @@ public enum DKMCommand {
                      endPitch: Double,
                      instrument: String)
 
-    // MARK: /Pulse
-
     /// A one-sample pulse inserted into the sound buffer.
     ///
     /// Useful for testing processors such as reverb and filters.
@@ -261,8 +231,6 @@ public enum DKMCommand {
     /// - Parameter channel:    The channel to receive the pulse.
     case pulseLine(startBeat: Double,
                    channel: DKMChannel)
-
-    // MARK: /Reverb
 
     /// A line of parameters for invoking the reverberator on a segment of the
     /// sound buffer.
@@ -284,17 +252,13 @@ public enum DKMCommand {
                     xTalkFactor: Double,
                     wetness: Double)
 
-    // MARK: /ScreenOut
-
-    /// Sets the screen output level.
+    /// A command that sets the screen output level.
     ///
     /// Overrides the default level of ``DKMScreenLevel/verbose`` and may be
     /// changed repeatedly throughout the score.
     ///
     /// - Parameter level:  The desired screen output level.
     case screenOut(DKMScreenLevel)
-
-    // MARK: /SendBack
 
     /// A line of parameters for sending a segment of the mix buffer back to the
     /// sound buffer.
@@ -309,16 +273,6 @@ public enum DKMCommand {
                       duration: Double,
                       gainLossdB: Double)
 
-    // MARK: /SFN
-
-    /// Specifies the name of the output sound file, overriding the name
-    /// provided on the command line.
-    ///
-    /// - Parameter name:  Path to the output sound file to create.
-    case soundFileName(String)
-
-    // MARK: /ShowBuffer
-
     /// A line of parameters for displaying raw sample data for a segment of the
     /// sound buffer.
     ///
@@ -329,7 +283,11 @@ public enum DKMCommand {
     case showBufferLine(startBeat: Double,
                         duration: Double)
 
-    // MARK: /Stats
+    /// A command that specifies the name of the output sound file,
+    /// overriding the name provided on the command line.
+    ///
+    /// - Parameter name:  Path to the output sound file to create.
+    case soundFileName(String)
 
     /// A line of parameters for displaying peak data for a segment of the sound
     /// buffer.
@@ -340,8 +298,6 @@ public enum DKMCommand {
     /// - Parameter duration:   Duration in beats.
     case statsLine(startBeat: Double,
                    duration: Double)
-
-    // MARK: /Tempo
 
     /// A line of parameters defining the tempo or a tempo change.
     ///
@@ -357,9 +313,8 @@ public enum DKMCommand {
                    initialTempo: Double,
                    finalTempo: Double)
 
-    // MARK: /Tuning
-
-    /// Sets the tuning parameters for equal-tempered pitch conversion.
+    /// A command that sets the tuning parameters for equal-tempered pitch
+    /// conversion.
     ///
     /// May appear multiple times in a score.  For non-equal-tempered tunings,
     /// specify pitches in Hz (negative values).
@@ -377,9 +332,8 @@ public enum DKMCommand {
                 pitchConvExponent: Double,
                 pitchConvFactor: Double)
 
-    // MARK: /Vocode
-
-    /// Sets vocode mode, specifying the clip source and vocoder parameters.
+    /// A command that sets vocode mode, specifying the clip source and
+    /// vocoder parameters.
     ///
     /// Must precede any ``vocodeNote(_:_:_:_:_:_:_:)`` entries for this vocoder
     /// configuration.

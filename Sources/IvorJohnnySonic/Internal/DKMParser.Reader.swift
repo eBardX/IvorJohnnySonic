@@ -56,7 +56,7 @@ extension DKMParser.Reader {
         return DKMScore(commands: commands)
     }
 
-    // MARK: Private Type Methods
+    // MARK: Private Type Properties
 
     private static let sectionPrefixes: [String: String] = ["CHO": "Chorus",
                                                             "CLI": "Clip",
@@ -84,6 +84,75 @@ extension DKMParser.Reader {
                                                             "VOC": "Vocode"]
 
     // MARK: Private Instance Methods
+
+    private func _parseChorusLine(_ line: Substring) throws -> DKMCommand {
+        let tokens = try _tokenize(line, 5)
+
+        return try .chorusLine(startBeat: _parseParameter(tokens[0], "startBeat", parseDouble),
+                               duration: _parseParameter(tokens[1], "duration", parseDouble),
+                               numberOfVoices: _parseParameter(tokens[2], "numberOfVoices", parseInt),
+                               depth: _parseParameter(tokens[3], "depth", parseDouble),
+                               flipChannels: _parseParameter(tokens[4], "flipChannels", parseBool))
+    }
+
+    private func _parseClipMode(_ line: Substring) throws -> DKMCommand {
+        let tokens = try _tokenize(line, 2)
+
+        return try .clipMode(channel: _parseParameter(tokens[0], "channel", parseClipChannel),
+                             name: _parseParameter(tokens[1], "name", parseString))
+    }
+
+    private func _parseClipNote(_ line: Substring) throws -> DKMCommand {
+        let tokens = try _tokenize(line, 7)
+
+        return try .clipNote(startBeat: _parseParameter(tokens[0], "startBeat", parseDouble),
+                             duration: _parseParameter(tokens[1], "duration", parseDouble),
+                             volume: _parseParameter(tokens[2], "volume", parseDouble),
+                             location: _parseParameter(tokens[3], "location", parseDouble),
+                             clipStart: _parseParameter(tokens[4], "clipStart", parseDouble),
+                             clipRate: _parseParameter(tokens[5], "clipRate", parseDouble),
+                             instrument: _parseParameter(tokens[6], "instrument", parseString))
+    }
+
+    private mutating func _parseCommand(_ section: String) throws -> DKMCommand? {
+        let prefix = String(section.prefix(3)).uppercased()
+
+        guard let canonical = Self.sectionPrefixes[prefix]
+        else { throw DKMParseError.invalidSection(currentLineNumber, section) }
+
+        switch canonical {
+        case "Clip":
+            clipModeExpected = true
+            currentSection = canonical
+
+        case "End":
+            currentSection = nil
+
+            return .end
+
+        case "Exclude":
+            currentSection = nil
+
+            return .exclude
+
+        case "Vocode":
+            currentSection = canonical
+            vocodeModeExpected = true
+
+        default:
+            currentSection = canonical
+        }
+
+        return nil
+    }
+
+    private func _parseCompressLine(_ line: Substring) throws -> DKMCommand {
+        let tokens = try _tokenize(line, 3)
+
+        return try .compressLine(startBeat: _parseParameter(tokens[0], "startBeat", parseDouble),
+                                 duration: _parseParameter(tokens[1], "duration", parseDouble),
+                                 maxRatio: _parseParameter(tokens[2], "maxRatio", parseDouble))
+    }
 
     private mutating func _parseDataLine(_ line: Substring) throws -> DKMCommand {
         guard let section = currentSection
@@ -171,75 +240,6 @@ extension DKMParser.Reader {
         default:
             throw DKMParseError.unexpectedDataLine(currentLineNumber)
         }
-    }
-
-    private func _parseChorusLine(_ line: Substring) throws -> DKMCommand {
-        let tokens = try _tokenize(line, 5)
-
-        return try .chorusLine(startBeat: _parseParameter(tokens[0], "startBeat", parseDouble),
-                               duration: _parseParameter(tokens[1], "duration", parseDouble),
-                               numberOfVoices: _parseParameter(tokens[2], "numberOfVoices", parseInt),
-                               depth: _parseParameter(tokens[3], "depth", parseDouble),
-                               flipChannels: _parseParameter(tokens[4], "flipChannels", parseBool))
-    }
-
-    private func _parseClipMode(_ line: Substring) throws -> DKMCommand {
-        let tokens = try _tokenize(line, 2)
-
-        return try .clipMode(channel: _parseParameter(tokens[0], "channel", parseClipChannel),
-                             name: _parseParameter(tokens[1], "name", parseString))
-    }
-
-    private func _parseClipNote(_ line: Substring) throws -> DKMCommand {
-        let tokens = try _tokenize(line, 7)
-
-        return try .clipNote(startBeat: _parseParameter(tokens[0], "startBeat", parseDouble),
-                             duration: _parseParameter(tokens[1], "duration", parseDouble),
-                             volume: _parseParameter(tokens[2], "volume", parseDouble),
-                             location: _parseParameter(tokens[3], "location", parseDouble),
-                             clipStart: _parseParameter(tokens[4], "clipStart", parseDouble),
-                             clipRate: _parseParameter(tokens[5], "clipRate", parseDouble),
-                             instrument: _parseParameter(tokens[6], "instrument", parseString))
-    }
-
-    private mutating func _parseCommand(_ section: String) throws -> DKMCommand? {
-        let prefix = String(section.prefix(3)).uppercased()
-
-        guard let canonical = Self.sectionPrefixes[prefix]
-        else { throw DKMParseError.invalidSection(currentLineNumber, section) }
-
-        switch canonical {
-        case "Clip":
-            clipModeExpected = true
-            currentSection = canonical
-
-        case "End":
-            currentSection = nil
-
-            return .end
-
-        case "Exclude":
-            currentSection = nil
-
-            return .exclude
-
-        case "Vocode":
-            currentSection = canonical
-            vocodeModeExpected = true
-
-        default:
-            currentSection = canonical
-        }
-
-        return nil
-    }
-
-    private func _parseCompressLine(_ line: Substring) throws -> DKMCommand {
-        let tokens = try _tokenize(line, 3)
-
-        return try .compressLine(startBeat: _parseParameter(tokens[0], "startBeat", parseDouble),
-                                 duration: _parseParameter(tokens[1], "duration", parseDouble),
-                                 maxRatio: _parseParameter(tokens[2], "maxRatio", parseDouble))
     }
 
     private func _parseFBALine(_ line: Substring) throws -> DKMCommand {

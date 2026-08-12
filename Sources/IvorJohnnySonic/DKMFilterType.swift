@@ -2,29 +2,29 @@
 
 /// A filter type for a JohnnySonic filter command.
 public enum DKMFilterType: Int {
-    /// All-pole bandpass with zero dB gain at passband.
-    case allPoleBandpassZeroDBGain = 1
-
     /// All-pole bandpass with power output equal to power input.
     case allPoleBandpassPowerPreserving = 2
 
-    /// Butterworth lowpass filter.
-    case butterworthLowpass = 3
-
-    /// Butterworth highpass filter.
-    case butterworthHighpass = 4
+    /// All-pole bandpass with zero dB gain at passband.
+    case allPoleBandpassZeroDBGain = 1
 
     /// Butterworth bandpass filter.
     case butterworthBandpass = 5
 
+    /// Butterworth highpass filter.
+    case butterworthHighpass = 4
+
+    /// Butterworth lowpass filter.
+    case butterworthLowpass = 3
+
     /// Butterworth notch filter.
     case butterworthNotch = 6
 
-    /// FIR lowpass filter.
-    case firLowpass = 13
-
     /// FIR highpass filter.
     case firHighpass = 14
+
+    /// FIR lowpass filter.
+    case firLowpass = 13
 
     /// FIR notch filter (LP @ 0.91 × freq + HP @ 1.1 × freq).
     case firNotch = 16

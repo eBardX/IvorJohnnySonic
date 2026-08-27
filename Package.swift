@@ -25,5 +25,6 @@ let package = Package(name: "IvorJohnnySonic",
                                         swiftSettings: swiftSettings),
                                 .testTarget(name: "IvorJohnnySonicTests",
                                             dependencies: [.target(name: "IvorJohnnySonic")],
+                                            resources: [.process("TestFixtures")],
                                             swiftSettings: swiftSettings)],
                       swiftLanguageModes: [.v6])
